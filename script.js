@@ -1,12 +1,16 @@
-let userIp;
-let userLatitude = 50.4019514;
-let userLongitude = 30.3926091;
+let userIp
+let userLatitude = 50.4019514
+let userLongitude = 30.3926091
+let closeModalBtn = document.querySelector('.close-modal-btn')
+let lightBtn = document.querySelector('.light-btn')
+let noLightBtn = document.querySelector('.no-light-btn')
+let currentClickLocation
 
 let locations = [
-    ['Kyjow', 50.4019514, 30.3926091, 'start'],
-    ['esvitlo', 50.4019514, 32.3926091,'1'],
-    ['nema', 50.4019514, 31.4926091,'2'],
-  ]
+  ['Kyjow', 50.4019514, 30.3926091, 'start'],
+  ['esvitlo', 50.4019514, 32.3926091, '1'],
+  ['nema', 50.4019514, 31.4926091, '2'],
+]
 
 fetch('https://ipapi.co/json/')
   .then((data) => data.json())
@@ -17,11 +21,8 @@ fetch('https://ipapi.co/json/')
     userLongitude = data.longitude
   })
 
-
-
-
-
 google.maps.event.addDomListener(window, 'load', init)
+
 function init() {
   var myOptions = {
     center: new google.maps.LatLng(userLatitude, userLongitude), // Координаты, какое место отображать на карте
@@ -34,29 +35,43 @@ function init() {
   )
   setMarkers(map, locations)
 
-//Добавить новый маркер
-  google.maps.event.addListener(map, 'click', function(e) {
-    var location = e.latLng;
-    console.log(location);
-     let newMarker = ['nema',location.lat(),location.lng(),'88']
-     locations.push(newMarker);
+  //Добавить новый маркер
+  google.maps.event.addListener(map, 'click', function (e) {
+    openModal(e)
+  })
 
+  closeModalBtn.addEventListener('click', closeModal)
+  lightBtn.addEventListener('click', () => confirmLight('confirm'))
+
+  function openModal(e) {
+    document.querySelector('.confirm-modal').classList.add('modal-is-open')
+    console.log(e)
+    currentClickLocation = e
+  }
+
+  function closeModal() {
+    document.querySelector('.confirm-modal').classList.remove('modal-is-open')
+  }
+
+  function confirmLight(confirmStatus) {
+    var location = currentClickLocation.latLng
+
+    let newMarker = ['nema', location.lat(), location.lng(), '88']
+    locations.push(newMarker)
     var marker = new google.maps.Marker({
-        position: location,
-        map: map
-    });
-
-    google.maps.event.addListener(marker, "click", function(e) {
-        var infoWindow = new google.maps.InfoWindow({
-            content: 'Latitude: ' + location.lat() + '<br />Longitude: ' + location.lng()
-        });
-        infoWindow.open(map, marker);
-    });
-    console.log(locations);
-});
+      position: location,
+      map: map,
+    })
+    google.maps.event.addListener(marker, 'click', function (e) {
+      var infoWindow = new google.maps.InfoWindow({
+        content:
+          'Latitude: ' + location.lat() + '<br />Longitude: ' + location.lng(),
+      })
+      infoWindow.open(map, marker)
+    })
+    closeModal()
+  }
 }
-
-
 
 function setMarkers(map, locations) {
   var marker, i, mark_position
