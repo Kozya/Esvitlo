@@ -5,11 +5,21 @@ let closeModalBtn = document.querySelector('.close-modal-btn')
 let lightBtn = document.querySelector('.light-btn')
 let noLightBtn = document.querySelector('.no-light-btn')
 let currentClickLocation
+let temlateInfoWindow
 
 let locations = [
-  ['Kyjow', 50.4019514, 30.3926091, 'start'],
-  ['esvitlo', 50.4019514, 32.3926091, '1'],
-  ['nema', 50.4019514, 31.4926091, '2'],
+  {
+    anyLight: true,
+    lat: 50.4019514,
+    lng: 30.3926091,
+    date: moment().format('MMMM Do YYYY, h:mm:ss a'),
+  },
+  {
+    anyLight: false,
+    lat: 50.6019514,
+    lng: 30.6926091,
+    date: moment().format('MMMM Do YYYY, h:mm:ss a'),
+  },
 ]
 
 fetch('https://ipapi.co/json/')
@@ -41,7 +51,8 @@ function init() {
   })
 
   closeModalBtn.addEventListener('click', closeModal)
-  lightBtn.addEventListener('click', () => confirmLight('confirm'))
+  lightBtn.addEventListener('click', () => confirmLight('lightOn'))
+  noLightBtn.addEventListener('click', () => confirmLight('lightOff'))
 
   function openModal(e) {
     document.querySelector('.confirm-modal').classList.add('modal-is-open')
@@ -55,18 +66,48 @@ function init() {
 
   function confirmLight(confirmStatus) {
     var location = currentClickLocation.latLng
+    let newMarker
+    if (confirmStatus === 'lightOn') {
+      newMarker = {
+        anyLight: true,
+        lat: location.lat(),
+        lng: location.lng(),
+        date: moment().format('MMMM Do YYYY, h:mm:ss a'),
+      }
+    } else {
+      newMarker = {
+        anyLight: false,
+        lat: location.lat(),
+        lng: location.lng(),
+        date: moment().format('MMMM Do YYYY, h:mm:ss a'),
+      }
+    }
 
-    let newMarker = ['nema', location.lat(), location.lng(), '88']
     locations.push(newMarker)
     var marker = new google.maps.Marker({
       position: location,
       map: map,
+      animation: google.maps.Animation.DROP,
+      icon: `${
+        newMarker.anyLight ? './icons/lamp-on.png' : './icons/lamp-off.png'
+      }`,
     })
     google.maps.event.addListener(marker, 'click', function (e) {
-      var infoWindow = new google.maps.InfoWindow({
-        content:
-          'Latitude: ' + location.lat() + '<br />Longitude: ' + location.lng(),
+      console.log(marker)
+      console.log(location)
+
+      locations.forEach((loc) => {
+        if (loc.lat == location.lat() && loc.lng == location.lng()) {
+          temlateInfoWindow = `${loc.anyLight ? 'свет есть' : 'света нет'} <br/>
+            отметка сделана : ${loc.date}
+            `
+        }
       })
+
+      var infoWindow = new google.maps.InfoWindow({
+        content: temlateInfoWindow,
+      })
+      console.log(temlateInfoWindow)
       infoWindow.open(map, marker)
     })
     closeModal()
@@ -79,31 +120,26 @@ function setMarkers(map, locations) {
     // Проходимся по нашему массиву с марками
 
     // Тут вроде и так все понятно
-    var title = locations[i][0]
-    var lat = locations[i][1]
-    var long = locations[i][2]
-    var text = locations[i][3]
+    var anyLight = locations[i].anyLight
+    var lat = locations[i].lat
+    var long = locations[i].lng
+    var date = locations[i].date
 
     mark_position = new google.maps.LatLng(lat, long) // Создаем позицию для отметки
 
     marker = new google.maps.Marker({
       // Что будет содержаться в отметке
       map: map, // К какой карте относиться отметка
-      title: title, // Заголовок отметки
       position: mark_position, // Позиция отметки
       animation: google.maps.Animation.DROP, // Анимация
-      icon: '', // Можно поменять иконку, если оставить пустые скобки, то будет оригинальная иконка
+      icon: `${anyLight ? './icons/lamp-on.png' : './icons/lamp-off.png'}`, // Можно поменять иконку, если оставить пустые скобки, то будет оригинальная иконка
     })
 
     // Дальше создаем контент для каждой отметки
 
-    var content =
-      '<div class="info-block"><h3>' +
-      title +
-      '</h3><b>' +
-      'Address: </b>' +
-      text +
-      '</div>'
+    var content = `${anyLight ? 'свет есть' : 'света нет'} <br/>
+    отметка сделана : ${date}
+    `
     var infowindow = new google.maps.InfoWindow()
 
     // При нажатии на марку, будет отображаться контент
