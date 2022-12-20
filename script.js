@@ -34,12 +34,12 @@ fetch('https://ipapi.co/json/')
 google.maps.event.addDomListener(window, 'load', init)
 
 function init() {
-  var myOptions = {
+  let myOptions = {
     center: new google.maps.LatLng(userLatitude, userLongitude), // Координаты, какое место отображать на карте
     zoom: 9, // Уровень риближения карты
     mapTypeId: google.maps.MapTypeId.ROADMAP, // Тип карты
   }
-  var map = new google.maps.Map(
+  let map = new google.maps.Map(
     document.getElementById('map'), // В каком блоке будет отображаться карта
     myOptions,
   )
@@ -56,7 +56,6 @@ function init() {
 
   function openModal(e) {
     document.querySelector('.confirm-modal').classList.add('modal-is-open')
-    console.log(e)
     currentClickLocation = e
   }
 
@@ -65,7 +64,7 @@ function init() {
   }
 
   function confirmLight(confirmStatus) {
-    var location = currentClickLocation.latLng
+    let location = currentClickLocation.latLng
     let newMarker
     if (confirmStatus === 'lightOn') {
       newMarker = {
@@ -84,46 +83,53 @@ function init() {
     }
 
     locations.push(newMarker)
-    var marker = new google.maps.Marker({
+    let marker = new google.maps.Marker({
       position: location,
       map: map,
       animation: google.maps.Animation.DROP,
-      icon: `${
-        newMarker.anyLight ? './icons/lamp-on.png' : './icons/lamp-off.png'
-      }`,
+      icon: `${newMarker.anyLight ? './icons/lamp-on.png' : './icons/lamp-off.png'
+        }`,
     })
     google.maps.event.addListener(marker, 'click', function (e) {
       console.log(marker)
       console.log(location)
 
-      locations.forEach((loc) => {
+      locations.forEach((loc, i) => {
         if (loc.lat == location.lat() && loc.lng == location.lng()) {
           temlateInfoWindow = `${loc.anyLight ? 'свет есть' : 'света нет'} <br/>
-            отметка сделана : ${loc.date}
-            `
+            отметка сделана : ${loc.date} <br/>
+            <button class='change-satus-btn' data-index='${i}'>Изменить</button>`;
+            
+         setTimeout(() => {
+          document.querySelector('.change-satus-btn').addEventListener('click',function(e) {
+            let index = e.target.dataset.index
+             locations[index].anyLight = !locations[index].anyLight;
+             locations[index].date = moment().format('MMMM Do YYYY, h:mm:ss a');
+             marker.icon = `${locations[index].anyLight ? './icons/lamp-on.png' : './icons/lamp-off.png'}`
+          })
+         }, 1);
         }
       })
 
-      var infoWindow = new google.maps.InfoWindow({
+      let infoWindow = new google.maps.InfoWindow({
         content: temlateInfoWindow,
       })
       console.log(temlateInfoWindow)
       infoWindow.open(map, marker)
     })
-    closeModal()
+    closeModal();
   }
 }
 
+
 function setMarkers(map, locations) {
-  var marker, i, mark_position
+  let marker, i, mark_position
   for (i = 0; i < locations.length; i++) {
     // Проходимся по нашему массиву с марками
-
-    // Тут вроде и так все понятно
-    var anyLight = locations[i].anyLight
-    var lat = locations[i].lat
-    var long = locations[i].lng
-    var date = locations[i].date
+    let anyLight = locations[i].anyLight
+    let lat = locations[i].lat
+    let long = locations[i].lng
+    let date = locations[i].date
 
     mark_position = new google.maps.LatLng(lat, long) // Создаем позицию для отметки
 
@@ -137,10 +143,11 @@ function setMarkers(map, locations) {
 
     // Дальше создаем контент для каждой отметки
 
-    var content = `${anyLight ? 'свет есть' : 'света нет'} <br/>
-    отметка сделана : ${date}
+    let content = `${anyLight ? 'свет есть' : 'света нет'} <br/>
+    отметка сделана : ${date} <br/>
+    <button class='change-satus-btn' data-index='${i}'>Изменить</button>
     `
-    var infowindow = new google.maps.InfoWindow()
+    let infowindow = new google.maps.InfoWindow()
 
     // При нажатии на марку, будет отображаться контент
 
