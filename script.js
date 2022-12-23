@@ -63,6 +63,17 @@ function init() {
     document.querySelector('.confirm-modal').classList.remove('modal-is-open')
   }
 
+  function changeMarkerStatus(index, locations, marker, location) {
+    let changedMarker = {};
+    changedMarker.anyLight = !locations[index].anyLight;
+    changedMarker.lat = location.lat();
+    changedMarker.lng = location.lng();
+    changedMarker.date = moment().format('MMMM Do YYYY, h:mm:ss a');
+    marker.setMap(null);
+    locations[index] = changedMarker;
+    setMarkers(map, locations)
+  }
+
   function confirmLight(confirmStatus) {
     let location = currentClickLocation.latLng
     let newMarker
@@ -86,7 +97,6 @@ function init() {
     let marker = new google.maps.Marker({
       position: location,
       map: map,
-      animation: google.maps.Animation.DROP,
       icon: `${newMarker.anyLight ? './icons/lamp-on.png' : './icons/lamp-off.png'
         }`,
     })
@@ -99,15 +109,10 @@ function init() {
           temlateInfoWindow = `${loc.anyLight ? 'свет есть' : 'света нет'} <br/>
             отметка сделана : ${loc.date} <br/>
             <button class='change-satus-btn' data-index='${i}'>Изменить</button>`;
-            
-         setTimeout(() => {
-          document.querySelector('.change-satus-btn').addEventListener('click',function(e) {
-            let index = e.target.dataset.index
-             locations[index].anyLight = !locations[index].anyLight;
-             locations[index].date = moment().format('MMMM Do YYYY, h:mm:ss a');
-             marker.icon = `${locations[index].anyLight ? './icons/lamp-on.png' : './icons/lamp-off.png'}`
-          })
-         }, 1);
+
+          setTimeout(() => {
+            document.querySelector('.change-satus-btn').addEventListener('click', () => changeMarkerStatus(i, locations, marker, location))
+          }, 1);
         }
       })
 
@@ -137,7 +142,6 @@ function setMarkers(map, locations) {
       // Что будет содержаться в отметке
       map: map, // К какой карте относиться отметка
       position: mark_position, // Позиция отметки
-      animation: google.maps.Animation.DROP, // Анимация
       icon: `${anyLight ? './icons/lamp-on.png' : './icons/lamp-off.png'}`, // Можно поменять иконку, если оставить пустые скобки, то будет оригинальная иконка
     })
 
@@ -145,9 +149,9 @@ function setMarkers(map, locations) {
 
     let content = `${anyLight ? 'свет есть' : 'света нет'} <br/>
     отметка сделана : ${date} <br/>
-    <button class='change-satus-btn' data-index='${i}'>Изменить</button>
-    `
-    let infowindow = new google.maps.InfoWindow()
+    <button class='change-marker-satus-btn' data-index='${i}'>Изменить</button>
+    `;
+    let infowindow = new google.maps.InfoWindow();
 
     // При нажатии на марку, будет отображаться контент
 
