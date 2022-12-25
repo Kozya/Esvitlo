@@ -1,117 +1,134 @@
-let userIp
-let userLatitude = 50.4019514
-let userLongitude = 30.3926091
-let closeModalBtn = document.querySelector('.close-modal-btn')
-let lightBtn = document.querySelector('.light-btn')
-let noLightBtn = document.querySelector('.no-light-btn')
-let currentClickLocation
-let temlateInfoWindow
+let userIp;
+let userLatitude = 50.4019514;
+let userLongitude = 30.3926091;
+let closeModalBtn = document.querySelector('.close-modal-btn');
+let lightBtn = document.querySelector('.light-btn');
+let noLightBtn = document.querySelector('.no-light-btn');
+let currentClickLocation;
+let temlateInfoWindow;
+let map;
+let markers = [];
+moment.lang('ua')
 
 let locations = [
   {
     anyLight: true,
     lat: 50.4019514,
     lng: 30.3926091,
-    date: moment().format('MMMM Do YYYY, h:mm:ss a'),
+    date: moment().format('DD.MM.YY, HH:mm'),
   },
   {
     anyLight: false,
     lat: 50.6019514,
     lng: 30.6926091,
-    date: moment().format('MMMM Do YYYY, h:mm:ss a'),
+    date: moment().format('DD.MM.YY, HH:mm'),
   },
 ]
 
 fetch('https://ipapi.co/json/')
   .then((data) => data.json())
   .then((data) => {
-    console.log(data)
-    userIp = data.ip
-    userLatitude = data.latitude
-    userLongitude = data.longitude
+    userIp = data.ip;
+    userLatitude = data.latitude;
+    userLongitude = data.longitude;
   })
 
 google.maps.event.addDomListener(window, 'load', init)
 
+function changeMarkerStatus(index, locations, marker, location, changed) {
+
+  for (i = 0; i < markers.length; i++) {
+    markers[i].setMap(null);
+  }
+  markers = [];
+
+  let changedMarker = {};
+  changedMarker.anyLight = !locations[index].anyLight;
+  if (changed) {
+    changedMarker.lat = location.lat;
+    changedMarker.lng = location.lng;
+  } else {
+    changedMarker.lat = location.lat();
+    changedMarker.lng = location.lng();
+  }
+
+  changedMarker.date = moment().format('DD.MM.YY, HH:mm');
+
+  marker.setMap(null);
+  locations[index] = changedMarker;
+  setMarkers(map, locations);
+}
+
 function init() {
   let myOptions = {
-    center: new google.maps.LatLng(userLatitude, userLongitude), // Координаты, какое место отображать на карте
-    zoom: 9, // Уровень риближения карты
-    mapTypeId: google.maps.MapTypeId.ROADMAP, // Тип карты
+    center: new google.maps.LatLng(userLatitude, userLongitude),
+    zoom: 9,
+    mapTypeId: google.maps.MapTypeId.ROADMAP,
   }
-  let map = new google.maps.Map(
-    document.getElementById('map'), // В каком блоке будет отображаться карта
+  map = new google.maps.Map(
+    document.getElementById('map'),
     myOptions,
   )
-  setMarkers(map, locations)
+  setMarkers(map, locations);
 
-  //Добавить новый маркер
   google.maps.event.addListener(map, 'click', function (e) {
-    openModal(e)
+    openModal(e);
   })
 
-  closeModalBtn.addEventListener('click', closeModal)
-  lightBtn.addEventListener('click', () => confirmLight('lightOn'))
-  noLightBtn.addEventListener('click', () => confirmLight('lightOff'))
+  closeModalBtn.addEventListener('click', closeModal);
+  lightBtn.addEventListener('click', () => confirmLight('lightOn'));
+  noLightBtn.addEventListener('click', () => confirmLight('lightOff'));
 
   function openModal(e) {
-    document.querySelector('.confirm-modal').classList.add('modal-is-open')
-    currentClickLocation = e
+    document.querySelector('.confirm-modal').classList.add('modal-is-open');
+    currentClickLocation = e;
   }
 
   function closeModal() {
-    document.querySelector('.confirm-modal').classList.remove('modal-is-open')
+    document.querySelector('.confirm-modal').classList.remove('modal-is-open');
   }
 
-  function changeMarkerStatus(index, locations, marker, location) {
-    let changedMarker = {};
-    changedMarker.anyLight = !locations[index].anyLight;
-    changedMarker.lat = location.lat();
-    changedMarker.lng = location.lng();
-    changedMarker.date = moment().format('MMMM Do YYYY, h:mm:ss a');
-    marker.setMap(null);
-    locations[index] = changedMarker;
-    setMarkers(map, locations)
-  }
 
   function confirmLight(confirmStatus) {
-    let location = currentClickLocation.latLng
-    let newMarker
+    let location = currentClickLocation.latLng;
+    let newMarker;
     if (confirmStatus === 'lightOn') {
       newMarker = {
         anyLight: true,
         lat: location.lat(),
         lng: location.lng(),
-        date: moment().format('MMMM Do YYYY, h:mm:ss a'),
+        date: moment().format('DD.MM.YY, HH:mm'),
       }
     } else {
       newMarker = {
         anyLight: false,
         lat: location.lat(),
         lng: location.lng(),
-        date: moment().format('MMMM Do YYYY, h:mm:ss a'),
+        date: moment().format('DD.MM.YY, HH:mm'),
       }
     }
 
-    locations.push(newMarker)
+    locations.push(newMarker);
+
+    mark_position = new google.maps.LatLng(newMarker.lat, newMarker.lng);
+
     let marker = new google.maps.Marker({
-      position: location,
+      position: mark_position,
       map: map,
       icon: `${newMarker.anyLight ? './icons/lamp-on.png' : './icons/lamp-off.png'
         }`,
     })
-    google.maps.event.addListener(marker, 'click', function (e) {
-      console.log(marker)
-      console.log(location)
+    markers.push(marker)
 
+    google.maps.event.addListener(marker, 'click', function (e) {
       locations.forEach((loc, i) => {
         if (loc.lat == location.lat() && loc.lng == location.lng()) {
-          temlateInfoWindow = `${loc.anyLight ? 'свет есть' : 'света нет'} <br/>
-            отметка сделана : ${loc.date} <br/>
-            <button class='change-satus-btn' data-index='${i}'>Изменить</button>`;
-
+          temlateInfoWindow = `<p class='info-window-title'>${loc.anyLight ? 'Світло є !' : 'Світла нема :('}</p>
+           <p class='info-window-date'> Відмітка зроблена : ${loc.date} </p>
+            <button class='change-satus-btn' data-index='${i}'>Змінити відмітку</button>`;
           setTimeout(() => {
-            document.querySelector('.change-satus-btn').addEventListener('click', () => changeMarkerStatus(i, locations, marker, location))
+            let index = document.querySelector('.change-satus-btn').getAttribute('data-index')
+            document.querySelector('.change-satus-btn').addEventListener('click', () => changeMarkerStatus(index, locations, marker, location, false));
           }, 1);
         }
       })
@@ -119,8 +136,7 @@ function init() {
       let infoWindow = new google.maps.InfoWindow({
         content: temlateInfoWindow,
       })
-      console.log(temlateInfoWindow)
-      infoWindow.open(map, marker)
+      infoWindow.open(map, marker);
     })
     closeModal();
   }
@@ -128,32 +144,26 @@ function init() {
 
 
 function setMarkers(map, locations) {
+
   let marker, i, mark_position
   for (i = 0; i < locations.length; i++) {
-    // Проходимся по нашему массиву с марками
-    let anyLight = locations[i].anyLight
-    let lat = locations[i].lat
-    let long = locations[i].lng
-    let date = locations[i].date
+    let anyLight = locations[i].anyLight;
+    let lat = locations[i].lat;
+    let long = locations[i].lng;
+    let date = locations[i].date;
 
-    mark_position = new google.maps.LatLng(lat, long) // Создаем позицию для отметки
-
+    mark_position = new google.maps.LatLng(lat, long);
     marker = new google.maps.Marker({
-      // Что будет содержаться в отметке
-      map: map, // К какой карте относиться отметка
-      position: mark_position, // Позиция отметки
-      icon: `${anyLight ? './icons/lamp-on.png' : './icons/lamp-off.png'}`, // Можно поменять иконку, если оставить пустые скобки, то будет оригинальная иконка
-    })
+      map: map,
+      position: mark_position,
+      icon: `${anyLight ? './icons/lamp-on.png' : './icons/lamp-off.png'}`,
+    });
+    markers.push(marker)
 
-    // Дальше создаем контент для каждой отметки
-
-    let content = `${anyLight ? 'свет есть' : 'света нет'} <br/>
-    отметка сделана : ${date} <br/>
-    <button class='change-marker-satus-btn' data-index='${i}'>Изменить</button>
-    `;
+    let content = `<p class='info-window-title'>${anyLight ? 'Світло є !' : 'Світла нема :('}</p>
+           <p class='info-window-date'> Відмітка зроблена : ${date} </p>
+            <button class='change-satus-btn' data-index='${i}'>Змінити відмітку</button>`;
     let infowindow = new google.maps.InfoWindow();
-
-    // При нажатии на марку, будет отображаться контент
 
     google.maps.event.addListener(
       marker,
@@ -162,6 +172,10 @@ function setMarkers(map, locations) {
         return function () {
           infowindow.setContent(content)
           infowindow.open(map, marker)
+          setTimeout(() => {
+            let index = document.querySelector('.change-satus-btn').getAttribute('data-index')
+            document.querySelector('.change-satus-btn').addEventListener('click', () => changeMarkerStatus(index, locations, marker, locations[index], true))
+          }, 100);
         }
       })(marker, content, infowindow),
     )
