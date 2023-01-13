@@ -1,69 +1,116 @@
 <!DOCTYPE html>
 <html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="style.css" />
+        <title>e-svitlo</title>
+    </head>
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <title>e-svitlo</title>
-</head>
-
-<body>
-    <header class="header">
-        <div class="container header-container">
-            <div class="logo">
-                <img src="./icons/lamp-logo.png" alt="logo">
-                <a class="logo-text" href="">ESvitlo</a>
+    <body>
+        <header class="header">
+            <div class="header-container container">
+                <div class="logo">
+                    <img src="./icons/lamp-logo.png" alt="logo" />
+                    <a class="logo-text" href="">ESvitlo</a>
+                </div>
+                <ul class="nav">
+                    <li>
+                        <a href="https://www.dtek-dnem.com.ua/ua/shutdowns" target="_blank">Офіційний
+                            сайт ДТЕК</a>
+                    </li>
+                    <li><a href="https://yasno.com.ua/" target="_blank">Офіційний сайт YASNO</a></li>
+                    <li>
+                        <a href="https://vodokanal.cv.ua/vodokanal-ukraine" target="_blank">Водоканали
+                            України</a>
+                    </li>
+                    <li><a href="https://nezlamnist.gov.ua/" target="_blank">Пункти незламності</a></li>
+                </ul>
             </div>
-            <ul class="nav">
-                <li><a href="">DTEK</a></li>
-                <li><a href="">Yasno</a></li>
-                <li><a href="">Vodocanal</a></li>
-            </ul>
-        </div>
-    </header>
-    <section class="container adv-block-hr">
-        Реклама
-    </section>
-    <section class="map-container container">
-        <div class="adv-block-vr">
-            Реклама
-        </div>
-        <div id="map"></div>
-        <div class="adv-block-vr">
-            Реклама
-        </div>
-        <div class="confirm-modal">
-            <p class="modal-title">У вас е свiтло?</p>
-            <div class="modal-img-container"><img src="./icons/lamp.svg" alt="lamp"></div>
-            <div class="btn-modal-container"> 
-                <button class="light-btn">Так</button>
-                <button class="no-light-btn">Нi</button>
+            <div class="hamburger-menu">
+                <input id="menu-toggle" type="checkbox" />
+                <label class="menu-btn" for="menu-toggle">
+                  <span></span>
+                </label>
+                <ul class="menu-box">
+                  <li>
+                    <a class="menu-item" href="https://www.dtek-dnem.com.ua/ua/shutdowns" target="_blank">Офіційний
+                        сайт ДТЕК</a>
+                </li>
+                <li><a class="menu-item" href="https://yasno.com.ua/" target="_blank">Офіційний сайт YASNO</a></li>
+                <li>
+                    <a class="menu-item" href="https://vodokanal.cv.ua/vodokanal-ukraine" target="_blank">Водоканали
+                        України</a>
+                </li>
+                <li><a class="menu-item" href="https://nezlamnist.gov.ua/" target="_blank">Пункти незламності</a></li>
+        
+                </ul>
+              </div>
+        </header>
+        <main class="container">
+            <section class=" info-block">
+                <p>
+                    Дорогі друзі. Наш сайт дає інформацію про наявність світла,
+                    завдяки відвідувачам. Будьте відповідальні, ставте маркери
+                    на карті якщо Ви на 100% впевнені в наявності електрики,
+                    або її відсутності. Якщо у Вас змінився статус
+                    електричного підключення, не полінуйтеся будь ласка, зайдіть
+                    на наш сайт і теж поміняйте інформацію про наявність
+                    електроенергії. Можливо своєю відміткою ви комусь дуже
+                    допоможете. Слава Україні!
+                </p>
+            </section>
+            <section class="adv-block-hr">Реклама</section>
+            <section class="map-container container">
+                <div class="adv-block-vr">Реклама</div>
+                <div id="map"></div>
+                <div class="adv-block-vr">Реклама</div>
+                <div class="confirm-modal">
+                    <p class="modal-title">У вас е свiтло?</p>
+                    <div class="modal-img-container">
+                        <img src="./icons/lamp.svg" alt="lamp" />
+                    </div>
+                    <div class="btn-modal-container">
+                        <button class="light-btn">Так</button>
+                        <button class="no-light-btn">Нi</button>
+                    </div>
+                    <div class="close-modal-btn">x</div>
+                </div>
+            </section>
+            <section class=" adv-block-hr">Реклама</section>
+            <section class="conventions info-block">
+                <p class="conventions-title">Умовні позначення</p>
+                <div class="conventions-wrapper">
+                    <div class="conventions-block">
+                        <img src="./icons/lamp-on.png" alt="lamp" />
+                        <p class="conventions-text">- світло є;</p>
+                    </div>
+                    <div class="conventions-block">
+                        <img src="./icons/lamp-off.png" alt="lamp" />
+                        <p class="conventions-text">- світла немає;</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <footer class="footer">
+            <div class="footer-container container">
+                <div class="copy-text-desktop">Усі права належать ©2023 esvitlo.net</div>
+                <ul class="footer-nav">
+                    <li><a href="">Угода про конфіденційність</a></li>
+                    <li><a href="">Угода користувача</a></li>
+                    <li><a href="">Написати нам</a></li>
+                </ul>
+                <div class="copy-text-wrapper">
+                    <div class="created-text">Created by Kozya</div>
+                    <div class="copy-text-mobile">Усі права належать ©2023 esvitlo.net</div>
+                </div>
+                
             </div>
-            <div class="close-modal-btn">x</div>
-        </div>
-    </section>
-    <section class="container adv-block-hr">
-        Реклама
-    </section>
-    <footer class="footer">
-        <div class="container footer-container">
-            <div class="copy-text">Все права принадлежат ©2022 esvitlo.net</div>
-            <ul class="footer-nav">
-                <li><a href="">Соглашение о конфиденциальности</a> </li>
-                <li><a href="">Пользовательское соглашение</a> </li>
-                <li><a href="">Написать нам</a> </li>
-            </ul>
-            <div class="created-text">Created by Kozya&Neff</div>
-        </div>
-
-    </footer>
-
-</body>
-<script src="https://maps.google.com/maps/api/js?key=AIzaSyBzAYr2leuO6PsxMdXR2EwfYvBXeZDi8pE"></script>
-<script src="moment.js"></script>
-<script src="script.js"></script>
-
-
+        </footer>
+    </body>
+    <script
+        src="https://maps.google.com/maps/api/js?key=AIzaSyBzAYr2leuO6PsxMdXR2EwfYvBXeZDi8pE"></script>
+    <script src="moment.js"></script>
+    <script src="script.js"></script>
 </html>
