@@ -1,0 +1,26 @@
+{
+  "name": "esvitlo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "dev": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kozya/Esvitlo.git"
+  },
+  "author": "Kozya",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Kozya/Esvitlo/issues"
+  },
+  "homepage": "https://github.com/Kozya/Esvitlo#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  },
+  "dependencies": {
+    "ejs": "^3.1.8",
+    "express": "^4.18.2"
+  }
+}
