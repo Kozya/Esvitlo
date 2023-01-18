@@ -18,7 +18,7 @@ const markerSchema = new Schema({
     date:{
         type:String,
         required:true,
-    }
+    },
    
 });
 

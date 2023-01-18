@@ -8,7 +8,7 @@ let currentClickLocation;
 let temlateInfoWindow;
 let map;
 let markers = [];
-moment.lang('ua')
+moment.locale('ua');
 
 
 let locations = []
@@ -23,7 +23,7 @@ function addMarker(marker) {
   })
   .then((res)=> res.json())
   .then((data)=>{
-    console.log(data);
+    locations[locations.length -1]._id = data._id;
   })
 }
 function getAllMarkers() {
@@ -32,7 +32,6 @@ function getAllMarkers() {
   })
   .then((res)=> res.json())
   .then((data)=>{
-    console.log(data);
     locations = data;   
     init();
   })
@@ -46,9 +45,11 @@ fetch('https://ipapi.co/json/')
     userLongitude = data.longitude;
   })
 
-google.maps.event.addDomListener(window, 'load', init)
+// google.maps.event.addDomListener(window, 'load', init)
 
 function changeMarkerStatus(index, locations, marker, location, changed) {
+  
+  let markerId = locations[index]._id;
 
   for (i = 0; i < markers.length; i++) {
     markers[i].setMap(null);
@@ -66,10 +67,23 @@ function changeMarkerStatus(index, locations, marker, location, changed) {
   }
 
   changedMarker.date = moment().format('DD.MM.YY, HH:mm');
+  changedMarker._id = markerId;
 
   marker.setMap(null);
   locations[index] = changedMarker;
   setMarkers(map, locations);
+
+  fetch(`/change-marker-status/${markerId}`, {
+    method: 'PUT',
+    body: JSON.stringify(changedMarker),
+        headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+  .then((res)=> res.json())
+  .then((data)=>{
+
+  })
 }
 function closeModal() {
   document.querySelector('.confirm-modal').classList.remove('modal-is-open');
@@ -129,7 +143,7 @@ function confirmLight(confirmStatus) {
 }
 
 function init() {
-  console.log(locations);
+
   let myOptions = {
     center: new google.maps.LatLng(userLatitude, userLongitude),
     zoom: 9,

@@ -43,26 +43,39 @@ app.get('/confidentiality', (req, res) => {
 })
 app.post('/add-marker', (req, res) => {
     const { anyLight, lat, lng, date } = req.body;
-    const marker = new Marker({ anyLight,lat,lng,date });
+    const marker = new Marker({ anyLight, lat, lng, date });
 
     marker
-    .save()
-    .then((result)=>{
-        res.send(result)
-    })
-    .catch((error)=>{
-        console.log(error)
-    })
-})
+        .save()
+        .then((result) => {
+            res.send(result);
+        })
+        .catch((error) => {
+            console.log(error);
+        })
+});
 app.get('/get-all-markers', (req, res) => {
     Marker
-    .find()
-    .then((result)=>{
-        res.send(result)
-    })
-    .catch((error)=>{
-        console.log(error)
-    })
+        .find()
+        .then((result) => {
+            res.send(result);
+        })
+        .catch((error) => {
+            console.log(error);
+        })
+});
+app.put('/change-marker-status/:id', (req, res) => {
+
+    const { anyLight, lat, lng, date } = req.body;
+    const { id } = req.params;
+    Marker
+        .findByIdAndUpdate(id, { anyLight, lat, lng, date })
+        .then((result) => {
+            res.send(result);
+        })
+        .catch((error) => {
+            console.log(error);
+        })
 })
 
 
