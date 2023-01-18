@@ -10,20 +10,33 @@ let map;
 let markers = [];
 moment.lang('ua')
 
-let locations = [
-  {
-    anyLight: true,
-    lat: 50.4019514,
-    lng: 30.3926091,
-    date: moment().format('DD.MM.YY, HH:mm'),
-  },
-  {
-    anyLight: false,
-    lat: 50.6019514,
-    lng: 30.6926091,
-    date: moment().format('DD.MM.YY, HH:mm'),
-  },
-]
+
+let locations = []
+
+function addMarker(marker) {
+  fetch('/add-marker', {
+    method: 'POST',
+    body: JSON.stringify(marker),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+  .then((res)=> res.json())
+  .then((data)=>{
+    console.log(data);
+  })
+}
+function getAllMarkers() {
+  fetch('/get-all-markers', {
+    method: 'GET',
+  })
+  .then((res)=> res.json())
+  .then((data)=>{
+    console.log(data);
+    locations = data;   
+    init();
+  })
+}
 
 fetch('https://ipapi.co/json/')
   .then((data) => data.json())
@@ -58,8 +71,65 @@ function changeMarkerStatus(index, locations, marker, location, changed) {
   locations[index] = changedMarker;
   setMarkers(map, locations);
 }
+function closeModal() {
+  document.querySelector('.confirm-modal').classList.remove('modal-is-open');
+}
+
+function confirmLight(confirmStatus) {
+  let location = currentClickLocation.latLng;
+  let newMarker;
+  if (confirmStatus === 'lightOn') {
+    newMarker = {
+      anyLight: true,
+      lat: location.lat(),
+      lng: location.lng(),
+      date: moment().format('DD.MM.YY, HH:mm'),
+    }
+  } else {
+    newMarker = {
+      anyLight: false,
+      lat: location.lat(),
+      lng: location.lng(),
+      date: moment().format('DD.MM.YY, HH:mm'),
+    }
+  }
+
+  locations.push(newMarker);
+  
+  mark_position = new google.maps.LatLng(newMarker.lat, newMarker.lng);
+
+  let marker = new google.maps.Marker({
+    position: mark_position,
+    map: map,
+    icon: `${newMarker.anyLight ? '../public/icons/lamp-on.png' : '../public/icons/lamp-off.png'
+      }`,
+  })
+  markers.push(marker)
+
+  google.maps.event.addListener(marker, 'click', function (e) {
+    locations.forEach((loc, i) => {
+      if (loc.lat == location.lat() && loc.lng == location.lng()) {
+        temlateInfoWindow = `<p class='info-window-title'>${loc.anyLight ? 'Світло є !' : 'Світла нема :('}</p>
+         <p class='info-window-date'> Відмітка зроблена : ${loc.date} </p>
+          <button class='change-satus-btn' data-index='${i}'>Змінити відмітку</button>`;
+        setTimeout(() => {
+          let index = document.querySelector('.change-satus-btn').getAttribute('data-index')
+          document.querySelector('.change-satus-btn').addEventListener('click', () => changeMarkerStatus(index, locations, marker, location, false));
+        }, 1);
+      }
+    })
+
+    let infoWindow = new google.maps.InfoWindow({
+      content: temlateInfoWindow,
+    })
+    infoWindow.open(map, marker);
+  })
+  addMarker(newMarker);
+  closeModal();
+}
 
 function init() {
+  console.log(locations);
   let myOptions = {
     center: new google.maps.LatLng(userLatitude, userLongitude),
     zoom: 9,
@@ -76,8 +146,8 @@ function init() {
   })
 
   closeModalBtn.addEventListener('click', closeModal);
-  lightBtn.addEventListener('click', () => confirmLight('lightOn'));
-  noLightBtn.addEventListener('click', () => confirmLight('lightOff'));
+  // lightBtn.addEventListener('click', () => confirmLight('lightOn'));
+  // noLightBtn.addEventListener('click', () => confirmLight('lightOff'));
 
   function openModal(e) {
     document.querySelector('.confirm-modal').classList.add('modal-is-open');
@@ -89,57 +159,6 @@ function init() {
   }
 
 
-  function confirmLight(confirmStatus) {
-    let location = currentClickLocation.latLng;
-    let newMarker;
-    if (confirmStatus === 'lightOn') {
-      newMarker = {
-        anyLight: true,
-        lat: location.lat(),
-        lng: location.lng(),
-        date: moment().format('DD.MM.YY, HH:mm'),
-      }
-    } else {
-      newMarker = {
-        anyLight: false,
-        lat: location.lat(),
-        lng: location.lng(),
-        date: moment().format('DD.MM.YY, HH:mm'),
-      }
-    }
-
-    locations.push(newMarker);
-
-    mark_position = new google.maps.LatLng(newMarker.lat, newMarker.lng);
-
-    let marker = new google.maps.Marker({
-      position: mark_position,
-      map: map,
-      icon: `${newMarker.anyLight ? '../public/icons/lamp-on.png' : '../public/icons/lamp-off.png'
-        }`,
-    })
-    markers.push(marker)
-
-    google.maps.event.addListener(marker, 'click', function (e) {
-      locations.forEach((loc, i) => {
-        if (loc.lat == location.lat() && loc.lng == location.lng()) {
-          temlateInfoWindow = `<p class='info-window-title'>${loc.anyLight ? 'Світло є !' : 'Світла нема :('}</p>
-           <p class='info-window-date'> Відмітка зроблена : ${loc.date} </p>
-            <button class='change-satus-btn' data-index='${i}'>Змінити відмітку</button>`;
-          setTimeout(() => {
-            let index = document.querySelector('.change-satus-btn').getAttribute('data-index')
-            document.querySelector('.change-satus-btn').addEventListener('click', () => changeMarkerStatus(index, locations, marker, location, false));
-          }, 1);
-        }
-      })
-
-      let infoWindow = new google.maps.InfoWindow({
-        content: temlateInfoWindow,
-      })
-      infoWindow.open(map, marker);
-    })
-    closeModal();
-  }
 }
 
 
@@ -181,3 +200,5 @@ function setMarkers(map, locations) {
     )
   }
 }
+
+getAllMarkers();
