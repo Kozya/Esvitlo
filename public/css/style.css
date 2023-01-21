@@ -11,6 +11,12 @@ body {
   margin: 0;
   font-family: "Roboto", "Open Sans", sans-serif;
 }
+h1 {
+  font-weight: normal;
+  font-size: inherit;
+  display: block;
+  margin: 20px;
+ }
 
 .adv-block-hr {
   min-height: 120px;
@@ -27,6 +33,7 @@ body {
   display: flex;
   justify-content: center;
   margin-bottom: 20px;
+  min-height: 71px;
 }
 
 .footer {
@@ -227,14 +234,17 @@ body {
 .conventions .conventions-title {
   margin-bottom: 0;
 }
-/* скрываем чекбокс */
+.conf-title{
+  font-weight: 600;
+}
+
 #menu-toggle {
   opacity: 0;
 }
-/* стилизуем кнопку */
+
 .menu-btn {
-  display: flex; /* используем flex для центрирования содержимого */
-  align-items: center; /* центрируем содержимое кнопки */
+  display: flex;
+  align-items: center;
   position: absolute;
   top: 20px;
   left: 20px;
@@ -243,7 +253,7 @@ body {
   cursor: pointer;
   z-index: 3;
 }
-/* добавляем "гамбургер" */
+
 .menu-btn > span,
 .menu-btn > span::before,
 .menu-btn > span::after {
@@ -261,7 +271,7 @@ body {
   content: "";
   top: 8px;
 }
-/* контейнер меню */
+
 .menu-box {
   display: block;
   position: fixed;
@@ -277,7 +287,7 @@ body {
   background-color: white;
   box-shadow: 1px 0px 6px rgba(0, 0, 0, 0.2);
 }
-/* элементы меню */
+
 .menu-item {
   display: block;
   padding: 12px 24px;

@@ -8,16 +8,16 @@
         <%- include('./partials/header.ejs')%>
         <main class="container">
             <section class=" info-block">
-                <p>
-                    Дорогі друзі. Наш сайт дає інформацію про наявність світла,
+                <h1>
+                    Дорогі друзі. Наш сервіс 'є-свiтло' дає інформацію про наявність світла,
                     завдяки відвідувачам. Будьте відповідальні, ставте маркери
                     на карті якщо Ви на 100% впевнені в наявності електрики,
                     або її відсутності. Якщо у Вас змінився статус
                     електричного підключення, не полінуйтеся будь ласка, зайдіть
-                    на наш сайт і теж поміняйте інформацію про наявність
+                    на наш сервіс і теж поміняйте інформацію про наявність
                     електроенергії. Можливо своєю відміткою ви комусь дуже
                     допоможете. Слава Україні!
-                </p>
+                </h1>
             </section>
             <section class="adv-block-hr">Реклама</section>
             <section class="map-container container">
@@ -53,8 +53,8 @@
         </main>
         <%- include('./partials/footer.ejs')%>
     </body>
-    <script
-        src="https://maps.google.com/maps/api/js?key=AIzaSyBzAYr2leuO6PsxMdXR2EwfYvBXeZDi8pE"></script>
+    
         <script src="../public/scripts/moment.js"></script>
         <script src="../public/scripts/script.js"></script>
+        <script src="https://maps.google.com/maps/api/js?key=AIzaSyBzAYr2leuO6PsxMdXR2EwfYvBXeZDi8pE&callback=getUserData"></script>
 </html>

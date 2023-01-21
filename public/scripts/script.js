@@ -1,6 +1,11 @@
 let userIp;
-let userLatitude = 50.4019514;
-let userLongitude = 30.3926091;
+let userLatitude;
+let userLongitude;
+
+let watchGeo = navigator.geolocation.watchPosition(function (position) {
+  getGeo(position.coords.latitude, position.coords.longitude);
+});
+
 let closeModalBtn = document.querySelector('.close-modal-btn');
 let lightBtn = document.querySelector('.light-btn');
 let noLightBtn = document.querySelector('.no-light-btn');
@@ -9,7 +14,6 @@ let temlateInfoWindow;
 let map;
 let markers = [];
 moment.locale('ua');
-
 
 let locations = []
 
@@ -21,34 +25,36 @@ function addMarker(marker) {
       'Content-Type': 'application/json'
     }
   })
-  .then((res)=> res.json())
-  .then((data)=>{
-    locations[locations.length -1]._id = data._id;
-  })
+    .then((res) => res.json())
+    .then((data) => {
+      locations[locations.length - 1]._id = data._id;
+    })
 }
 function getAllMarkers() {
   fetch('/get-all-markers', {
     method: 'GET',
   })
-  .then((res)=> res.json())
-  .then((data)=>{
-    locations = data;   
-    init();
-  })
+    .then((res) => res.json())
+    .then((data) => {
+      locations = data;
+      init();
+    })
+}
+function getGeo(latitude, longitude) {
+  userLatitude = latitude;
+  userLongitude = longitude;
+}
+function getUserData() {
+  fetch('https://ipapi.co/json/')
+    .then((data) => data.json())
+    .then((data) => {
+      userIp = data.ip;
+      getAllMarkers()
+    })
 }
 
-fetch('https://ipapi.co/json/')
-  .then((data) => data.json())
-  .then((data) => {
-    userIp = data.ip;
-    userLatitude = data.latitude;
-    userLongitude = data.longitude;
-  })
-
-// google.maps.event.addDomListener(window, 'load', init)
-
 function changeMarkerStatus(index, locations, marker, location, changed) {
-  
+
   let markerId = locations[index]._id;
 
   for (i = 0; i < markers.length; i++) {
@@ -76,14 +82,14 @@ function changeMarkerStatus(index, locations, marker, location, changed) {
   fetch(`/change-marker-status/${markerId}`, {
     method: 'PUT',
     body: JSON.stringify(changedMarker),
-        headers: {
+    headers: {
       'Content-Type': 'application/json'
     }
   })
-  .then((res)=> res.json())
-  .then((data)=>{
+    .then((res) => res.json())
+    .then((data) => {
 
-  })
+    })
 }
 function closeModal() {
   document.querySelector('.confirm-modal').classList.remove('modal-is-open');
@@ -109,7 +115,7 @@ function confirmLight(confirmStatus) {
   }
 
   locations.push(newMarker);
-  
+
   mark_position = new google.maps.LatLng(newMarker.lat, newMarker.lng);
 
   let marker = new google.maps.Marker({
@@ -146,7 +152,7 @@ function init() {
 
   let myOptions = {
     center: new google.maps.LatLng(userLatitude, userLongitude),
-    zoom: 9,
+    zoom: 14,
     mapTypeId: google.maps.MapTypeId.ROADMAP,
   }
   map = new google.maps.Map(
