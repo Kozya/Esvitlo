@@ -390,6 +390,9 @@ h1 {
   .container {
     width: 100%;
   }
+  .confirm-modal{
+    left: 20%;
+  }
 
   .footer-container {
     flex-direction: column;
