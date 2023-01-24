@@ -1,10 +1,15 @@
 let userIp;
+
 let userLatitude;
 let userLongitude;
 
-let watchGeo = navigator.geolocation.watchPosition(function (position) {
-  getGeo(position.coords.latitude, position.coords.longitude);
-});
+function getGeo () {
+  navigator.geolocation.getCurrentPosition(function (position) {
+    userLatitude = position.coords.latitude;
+    userLongitude = position.coords.longitude;
+  });
+
+};
 
 let closeModalBtn = document.querySelector('.close-modal-btn');
 let lightBtn = document.querySelector('.light-btn');
@@ -15,35 +20,33 @@ let map;
 let markers = [];
 moment.locale('ua');
 
-let locations = []
+let locations = [];
 
 function addMarker(marker) {
   fetch('/add-marker', {
-    method: 'POST',
-    body: JSON.stringify(marker),
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  })
+      method: 'POST',
+      body: JSON.stringify(marker),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
     .then((res) => res.json())
     .then((data) => {
       locations[locations.length - 1]._id = data._id;
     })
 }
+
 function getAllMarkers() {
   fetch('/get-all-markers', {
-    method: 'GET',
-  })
+      method: 'GET',
+    })
     .then((res) => res.json())
     .then((data) => {
       locations = data;
       init();
     })
 }
-function getGeo(latitude, longitude) {
-  userLatitude = latitude;
-  userLongitude = longitude;
-}
+
 function getUserData() {
   fetch('https://ipapi.co/json/')
     .then((data) => data.json())
@@ -80,17 +83,18 @@ function changeMarkerStatus(index, locations, marker, location, changed) {
   setMarkers(map, locations);
 
   fetch(`/change-marker-status/${markerId}`, {
-    method: 'PUT',
-    body: JSON.stringify(changedMarker),
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  })
+      method: 'PUT',
+      body: JSON.stringify(changedMarker),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
     .then((res) => res.json())
     .then((data) => {
 
     })
 }
+
 function closeModal() {
   document.querySelector('.confirm-modal').classList.remove('modal-is-open');
 }
@@ -149,6 +153,13 @@ function confirmLight(confirmStatus) {
 }
 
 function init() {
+
+  getGeo()
+
+  if(!userLatitude && !userLongitude){
+    userLatitude = 50.446194753393186;
+    userLongitude = 30.52231086173203;
+  }
 
   let myOptions = {
     center: new google.maps.LatLng(userLatitude, userLongitude),
