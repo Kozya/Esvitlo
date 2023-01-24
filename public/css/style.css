@@ -17,6 +17,24 @@ h1 {
   display: block;
   margin: 20px;
  }
+ .close-modal-btn{
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+ }
+ .close-modal-btn img{
+  width: 60%;
+  height: 60%;
+ }
+ .gm-style-iw .gm-ui-hover-effect{
+  right: 2px!important;
+ }
+ .gm-style-iw .gm-ui-hover-effect span{
+  width: 20px!important;
+  height: 20px!important;
+ }
 
 .adv-block-hr {
   min-height: 120px;
