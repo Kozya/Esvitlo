@@ -3,13 +3,22 @@ let userIp;
 let userLatitude;
 let userLongitude;
 
-function getGeo () {
-  navigator.geolocation.getCurrentPosition(function (position) {
-    userLatitude = position.coords.latitude;
-    userLongitude = position.coords.longitude;
-  });
 
-};
+
+function getLocation() {
+  navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+}
+
+function successCallback(position) {
+  userLatitude = position.coords.latitude;
+  userLongitude = position.coords.longitude;
+
+  getUserData(userLatitude,userLongitude);
+}
+
+function errorCallback(error) {
+  console.log(error);
+}
 
 let closeModalBtn = document.querySelector('.close-modal-btn');
 let lightBtn = document.querySelector('.light-btn');
@@ -43,16 +52,21 @@ function getAllMarkers() {
     .then((res) => res.json())
     .then((data) => {
       locations = data;
-      init();
+      getUserData(userLatitude,userLongitude);
     })
 }
 
-function getUserData() {
+function getUserData(userLatitude,userLongitude) {
   fetch('https://ipapi.co/json/')
     .then((data) => data.json())
     .then((data) => {
       userIp = data.ip;
-      getAllMarkers()
+
+      if(!userLatitude){
+        userLatitude = data.latitude
+        userLongitude = data.longitude
+      }
+      init(userLatitude,userLongitude)
     })
 }
 
@@ -152,14 +166,7 @@ function confirmLight(confirmStatus) {
   closeModal();
 }
 
-function init() {
-
-  getGeo()
-
-  if(!userLatitude && !userLongitude){
-    userLatitude = 50.446194753393186;
-    userLongitude = 30.52231086173203;
-  }
+function init(userLatitude,userLongitude) {
 
   let myOptions = {
     center: new google.maps.LatLng(userLatitude, userLongitude),

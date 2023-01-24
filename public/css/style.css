@@ -115,6 +115,9 @@ h1 {
   width: 100%;
   margin: 10px;
 }
+.conf-main p,.conf-main h4{
+  padding: 0 20px 0 20px;
+}
 
 .adv-block-vr {
   width: auto;
