@@ -1,130 +1,116 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <%- include('./partials/head.ejs')%>
-            <script async
-                src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7942192156596523"
-                crossorigin="anonymous"></script>
-        </head>
 
-        <body>
-            <%- include('./partials/header.ejs')%>
-                <main class="container">
-                    <section class=" info-block">
-                        <h1>
-                            Дорогі друзі. Наш сервіс 'є-свiтло' дає інформацію
-                            про наявність світла,
-                            завдяки відвідувачам. Будьте відповідальні, ставте
-                            маркери
-                            на карті якщо Ви на 100% впевнені в наявності
-                            електрики,
-                            або її відсутності. Якщо у Вас змінився статус
-                            електричного підключення, не полінуйтеся будь ласка,
-                            зайдіть
-                            на наш сервіс і теж поміняйте інформацію про
-                            наявність
-                            електроенергії. Можливо своєю відміткою ви комусь
-                            дуже
-                            допоможете. Слава Україні!
-                        </h1>
-                    </section>
-                    <section class="adv-block-hr">
-                        <script async
+<head>
+    <%- include('./partials/head.ejs')%>
+        <script async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7942192156596523"
+            crossorigin="anonymous"></script>
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+</head>
+
+<body>
+    <%- include('./partials/header.ejs')%>
+        <main class="container">
+            <section class=" info-block">
+                <h1>
+                    Дорогі друзі. Наш сервіс 'є-свiтло' дає інформацію
+                    про наявність світла,
+                    завдяки відвідувачам. Будьте відповідальні, ставте
+                    маркери
+                    на карті якщо Ви на 100% впевнені в наявності
+                    електрики,
+                    або її відсутності. Якщо у Вас змінився статус
+                    електричного підключення, не полінуйтеся будь ласка,
+                    зайдіть
+                    на наш сервіс і теж поміняйте інформацію про
+                    наявність
+                    електроенергії. Можливо своєю відміткою ви комусь
+                    дуже
+                    допоможете. Слава Україні!
+                </h1>
+            </section>
+            <section class="adv-block-hr">
+                <script async
+                    src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7942192156596523"
+                    crossorigin="anonymous"></script>
+                <!-- main-h-block -->
+                <ins class="adsbygoogle" style="display:block;height:120px" data-ad-client="ca-pub-7942192156596523"
+                    data-ad-slot="4679412779" data-ad-format="auto" data-full-width-responsive="true"></ins>
+                <script>
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+            </section>
+            <section class="map-container container">
+                <div class="adv-block-vr">
+                    <script async
                         src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7942192156596523"
                         crossorigin="anonymous"></script>
-                    <!-- main-h-block -->
-                    <ins class="adsbygoogle"
-                        style="display:block;height:120px"
-                        data-ad-client="ca-pub-7942192156596523"
-                        data-ad-slot="4679412779"
-                        data-ad-format="auto"
-                        data-full-width-responsive="true"></ins>
+                    <!-- main-v-block -->
+                    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7942192156596523"
+                        data-ad-slot="7497147801" data-full-width-responsive="true"></ins>
                     <script>
                         (adsbygoogle = window.adsbygoogle || []).push({});
                     </script>
-                    </section>
-                    <section class="map-container container">
-                        <div class="adv-block-vr">
-                            <script async
-                                src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7942192156596523"
-                                crossorigin="anonymous"></script>
-                            <!-- main-v-block -->
-                            <ins class="adsbygoogle"
-                                style="display:block"
-                                data-ad-client="ca-pub-7942192156596523"
-                                data-ad-slot="7497147801"                       
-                                data-full-width-responsive="true"></ins>
-                            <script>
-                            (adsbygoogle = window.adsbygoogle || []).push({});
-                       </script>
-                        </div>
-                        <div id="map"></div>
-                        <div class="adv-block-vr">
-                            <script async
-                                src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7942192156596523"
-                                crossorigin="anonymous"></script>
-                            <!-- main-v-block -->
-                            <ins class="adsbygoogle"
-                                style="display:block"
-                                data-ad-client="ca-pub-7942192156596523"
-                                data-ad-slot="7497147801"                            
-                                data-full-width-responsive="true"></ins>
-                            <script>
-                                (adsbygoogle = window.adsbygoogle || []).push({});
-                            </script>
-                        </div>
-                        <div class="confirm-modal">
-                            <p class="modal-title">У вас е свiтло?</p>
-                            <div class="modal-img-container">
-                                <img src="/public/icons/lamp.svg" alt="lamp" />
-                            </div>
-                            <div class="btn-modal-container">
-                                <button class="light-btn"
-                                    onclick="confirmLight('lightOn')">Так</button>
-                                <button class="no-light-btn"
-                                    onclick="confirmLight('lightOff')">Нi</button>
-                            </div>
-                            <div class="close-modal-btn">
-                                <img src="/public/icons/close.png" alt="close">
-                            </div>
-                        </div>
-                    </section>
-                    <section class="adv-block-hr">
-                        <script async
-                            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7942192156596523"
-                            crossorigin="anonymous"></script>
-                        <!-- main-h-block -->
-                        <ins class="adsbygoogle"
-                            style="display:block;height:120px"
-                            data-ad-client="ca-pub-7942192156596523"
-                            data-ad-slot="4679412779"
-                            data-ad-format="auto"
-                            data-full-width-responsive="true"></ins>
-                        <script>
-                            (adsbygoogle = window.adsbygoogle || []).push({});
-                        </script>
-                    </section>
-                    <section class="conventions info-block">
-                        <p class="conventions-title">Умовні позначення</p>
-                        <div class="conventions-wrapper">
-                            <div class="conventions-block">
-                                <img src="/public/icons/lamp-on.png" alt="lamp"
-                                    />
-                                <p class="conventions-text">- світло є;</p>
-                            </div>
-                            <div class="conventions-block">
-                                <img src="/public/icons/lamp-off.png" alt="lamp"
-                                    />
-                                <p class="conventions-text">- світла немає;</p>
-                            </div>
-                        </div>
-                    </section>
-                </main>
-                <%- include('./partials/footer.ejs')%>
-                </body>
+                </div>
+                <input id="pac-input" class="controls" type="text" placeholder="Введіть адресу" />
+                <div id="map"></div>
+                <div class="adv-block-vr">
+                    <script async
+                        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7942192156596523"
+                        crossorigin="anonymous"></script>
+                    <!-- main-v-block -->
+                    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7942192156596523"
+                        data-ad-slot="7497147801" data-full-width-responsive="true"></ins>
+                    <script>
+                        (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
+                </div>
+                <div class="confirm-modal">
+                    <p class="modal-title">У вас е свiтло?</p>
+                    <div class="modal-img-container">
+                        <img src="/public/icons/lamp.svg" alt="lamp" />
+                    </div>
+                    <div class="btn-modal-container">
+                        <button class="light-btn" onclick="confirmLight('lightOn')">Так</button>
+                        <button class="no-light-btn" onclick="confirmLight('lightOff')">Нi</button>
+                    </div>
+                    <div class="close-modal-btn">
+                        <img src="/public/icons/close.png" alt="close">
+                    </div>
+                </div>
+            </section>
+            <section class="adv-block-hr">
+                <script async
+                    src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7942192156596523"
+                    crossorigin="anonymous"></script>
+                <!-- main-h-block -->
+                <ins class="adsbygoogle" style="display:block;height:120px" data-ad-client="ca-pub-7942192156596523"
+                    data-ad-slot="4679412779" data-ad-format="auto" data-full-width-responsive="true"></ins>
+                <script>
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+            </section>
+            <section class="conventions info-block">
+                <p class="conventions-title">Умовні позначення</p>
+                <div class="conventions-wrapper">
+                    <div class="conventions-block">
+                        <img src="/public/icons/lamp-on.png" alt="lamp" />
+                        <p class="conventions-text">- світло є;</p>
+                    </div>
+                    <div class="conventions-block">
+                        <img src="/public/icons/lamp-off.png" alt="lamp" />
+                        <p class="conventions-text">- світла немає;</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <%- include('./partials/footer.ejs')%>
+</body>
 
-                <script src="../public/scripts/moment.js"></script>
-                <script src="../public/scripts/script.js"></script>
-                <script
-                    src="https://maps.google.com/maps/api/js?key=AIzaSyBzAYr2leuO6PsxMdXR2EwfYvBXeZDi8pE&callback=getLocation"></script>
-            </html>
+<script src="../public/scripts/moment.js"></script>
+<script src="../public/scripts/script.js"></script>
+<script
+    src="https://maps.google.com/maps/api/js?key=AIzaSyBzAYr2leuO6PsxMdXR2EwfYvBXeZDi8pE&callback=getLocation&libraries=places&v=weekly"></script>
+
+</html>

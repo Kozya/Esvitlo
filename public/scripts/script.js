@@ -13,7 +13,7 @@ function successCallback(position) {
   userLatitude = position.coords.latitude;
   userLongitude = position.coords.longitude;
 
-  getUserData(userLatitude,userLongitude);
+  getUserData(userLatitude, userLongitude);
 }
 
 function errorCallback(error) {
@@ -33,12 +33,12 @@ let locations = [];
 
 function addMarker(marker) {
   fetch('/add-marker', {
-      method: 'POST',
-      body: JSON.stringify(marker),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
+    method: 'POST',
+    body: JSON.stringify(marker),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
     .then((res) => res.json())
     .then((data) => {
       locations[locations.length - 1]._id = data._id;
@@ -47,26 +47,26 @@ function addMarker(marker) {
 
 function getAllMarkers() {
   fetch('/get-all-markers', {
-      method: 'GET',
-    })
+    method: 'GET',
+  })
     .then((res) => res.json())
     .then((data) => {
       locations = data;
-      getUserData(userLatitude,userLongitude);
+      getUserData(userLatitude, userLongitude);
     })
 }
 
-function getUserData(userLatitude,userLongitude) {
+function getUserData(userLatitude, userLongitude) {
   fetch('https://ipapi.co/json/')
     .then((data) => data.json())
     .then((data) => {
       userIp = data.ip;
 
-      if(!userLatitude){
+      if (!userLatitude) {
         userLatitude = data.latitude
         userLongitude = data.longitude
       }
-      init(userLatitude,userLongitude)
+      init(userLatitude, userLongitude);
     })
 }
 
@@ -97,12 +97,12 @@ function changeMarkerStatus(index, locations, marker, location, changed) {
   setMarkers(map, locations);
 
   fetch(`/change-marker-status/${markerId}`, {
-      method: 'PUT',
-      body: JSON.stringify(changedMarker),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
+    method: 'PUT',
+    body: JSON.stringify(changedMarker),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
     .then((res) => res.json())
     .then((data) => {
 
@@ -165,8 +165,82 @@ function confirmLight(confirmStatus) {
   addMarker(newMarker);
   closeModal();
 }
+function initAutocomplete(map) {
+    const input = document.getElementById("pac-input");
+    const searchBox = new google.maps.places.SearchBox(input);
 
-function init(userLatitude,userLongitude) {
+    map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+    // Bias the SearchBox results towards current map's viewport.
+    map.addListener("bounds_changed", () => {
+      searchBox.setBounds(map.getBounds());
+    });
+    let markers = [];
+
+    searchBox.addListener("places_changed", () => {
+      const places = searchBox.getPlaces();
+
+      if (places.length == 0) {
+        return;
+      }
+
+      // Clear out the old markers.
+      markers.forEach((marker) => {
+        marker.setMap(null);
+      });
+      markers = [];
+
+      // For each place, get the icon, name and location.
+      const bounds = new google.maps.LatLngBounds();
+
+      places.forEach((place) => {
+        if (!place.geometry || !place.geometry.location) {
+          console.log("Returned place contains no geometry");
+          return;
+        }
+
+        const icon = {
+          url: place.icon,
+          size: new google.maps.Size(25, 25),
+          origin: new google.maps.Point(0, 0),
+          anchor: new google.maps.Point(17, 34),
+          scaledSize: new google.maps.Size(25, 25),
+        };
+
+        // Create a marker for each place.
+        markers.push(
+          new google.maps.Marker({
+            map,
+            icon,
+            title: place.name,
+            position: place.geometry.location,
+          })
+        );
+        let marker = markers[0];
+         google.maps.event.addListener(marker,'click', function (e) {
+            document.querySelector('.confirm-modal').classList.add('modal-is-open');
+            currentClickLocation = e;
+            markers.forEach((marker) => {
+              marker.setMap(null);
+            });
+            markers = [];
+        })
+
+        if (place.geometry.viewport) {
+          bounds.union(place.geometry.viewport);
+        } else {
+          bounds.extend(place.geometry.location);
+        }
+      });
+      map.fitBounds(bounds);
+    });
+    setTimeout(() => {
+      input.style.display='block';
+    }, 500);
+    
+    
+}
+
+function init(userLatitude, userLongitude) {
 
   let myOptions = {
     center: new google.maps.LatLng(userLatitude, userLongitude),
@@ -195,10 +269,12 @@ function init(userLatitude,userLongitude) {
   function closeModal() {
     document.querySelector('.confirm-modal').classList.remove('modal-is-open');
   }
+  setTimeout(() => {
+    initAutocomplete(map) 
+  }, 1000);
 
-
+   
 }
-
 
 function setMarkers(map, locations) {
 

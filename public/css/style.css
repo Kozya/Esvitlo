@@ -354,6 +354,16 @@ h1 {
 .hamburger-menu {
   display: none;
 }
+#pac-input{
+  display: none;
+  top: 11px!important;
+  left: 207px!important;
+  height: 37px;
+  border-radius: 4px;
+  border: 1px solid #1f1f1f;
+  width: 30%;
+  padding: 0 10px;
+}
 @media (max-width: 1200px) {
     .container {
       width: 990px;
@@ -410,6 +420,11 @@ h1 {
   }
   .confirm-modal{
     left: 20%;
+  }
+  #pac-input{
+    top: 61px!important;
+    left: 12px!important;
+    width: 187px;
   }
 
   .footer-container {
